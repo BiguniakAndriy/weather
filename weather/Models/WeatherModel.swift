@@ -12,6 +12,22 @@ struct WeatherModel {
     var city              : CityModel
     var weather           : PresentationWeatherModel
     var temperatureFormat : TemperatureFormat
+    
+    func getTemperature(mainTemp: Bool) -> String {
+        
+        // mainTemp or feelsLike
+        let temp = mainTemp == true ? self.weather.temp : self.weather.tempFeelsLike
+        
+        switch self.temperatureFormat {
+        case .fahrenheit:
+            return String((temp - 273.15) * 1.8 + 32)+" °F"
+        case .celsius:
+            return String(temp - 273.15)+" °C"
+        case .kelvin:
+            return String(temp)+" K"
+        }
+    }
+    
 }
 
 struct PresentationWeatherModel {

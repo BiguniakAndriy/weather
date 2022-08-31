@@ -24,6 +24,7 @@ class NetworkManager {
             return []
         }
         
+        // get data
         do {
             let (data, response) = try await URLSession.shared.data(from: jsonUrl)
             guard (response as? HTTPURLResponse)?.statusCode == 200
@@ -32,6 +33,7 @@ class NetworkManager {
             else { return [] }
             return [city.lat, city.lon]
         }
+        // error
         catch let error {
             print("ERROR: serialization json. ", error)
             return []
@@ -59,10 +61,11 @@ class NetworkManager {
             let webWeatherModel = try JSONDecoder().decode(WebWeatherModel.self, from: data)
                 return webWeatherModel
         }
+        // error
         catch let error {
             print(error)
             return nil
         }
     }
     
-}
+} // class end

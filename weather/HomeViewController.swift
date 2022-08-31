@@ -131,6 +131,7 @@ class HomeViewController: UIViewController {
         label.textAlignment = .center
     }
     
+    
 } // class end
 
 
@@ -149,10 +150,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             cell.textLabel?.text = "Description - \(self.data?.weather.description ?? "")"
         case 1:
             cell.imageView?.image = UIImage(systemName: "thermometer")
-            cell.textLabel?.text = "Temperature - \(self.data?.weather.temp ?? 0)"
+            cell.textLabel?.text = "Temperature - " + (self.data?.getTemperature(mainTemp: true) ?? "???")
         case 2:
             cell.imageView?.image = UIImage(systemName: "thermometer.sun")
-            cell.textLabel?.text = "Fells like - \(self.data?.weather.tempFeelsLike ?? 0)"
+            cell.textLabel?.text = "Fells like - " + (self.data?.getTemperature(mainTemp: false) ?? "???")
         case 3:
             cell.imageView?.image = UIImage(systemName: "humidity")
             cell.textLabel?.text = "Humidity - \(self.data?.weather.humidity ?? 0)"
