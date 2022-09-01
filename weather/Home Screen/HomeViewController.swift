@@ -10,14 +10,16 @@ import UIKit
 class HomeViewController: UIViewController {
     
     //MARK: - VARs
+    
+    private let viewModel = HomeViewModel()
     private let nameLabel = UILabel()
     private let typeLabel = UILabel()
     private let table     = UITableView()
     private let button    = UIButton(type: .system)
-    private var data      : DataModel?
     
     
     //MARK: - LIFE CYCLE
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -109,12 +111,11 @@ class HomeViewController: UIViewController {
     
     // MARK: - ACTIONS
 
-    // button pressed
     @objc private func buttonPressed() {
         let vc = SelectionViewController()
         vc.callbackWithDataModel? = { dataModel in
             print("2 - \(dataModel)")
-            self.data = dataModel
+            self.viewModel.dataModel = dataModel
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -123,12 +124,12 @@ class HomeViewController: UIViewController {
     // MARK: - HELPERS
     
     private func setupData() {
-        self.nameLabel.text = self.data?.city.name ?? "City name"
-        self.typeLabel.text = self.data?.city.size.rawValue ?? "Size"
-        self.table.isHidden = self.data == nil ? true : false
+        self.nameLabel.text = self.viewModel.dataModel?.city.name ?? "City name"
+        self.typeLabel.text = self.viewModel.dataModel?.city.size.rawValue ?? "Size"
+        self.table.isHidden = self.viewModel.dataModel == nil ? true : false
         self.table.reloadData()
         
-        if self.data == nil { print("ERROR: where is my data ?") }
+        if self.viewModel.dataModel == nil { print("ERROR: where is my data ?") }
     }
     
 } // class end
@@ -141,30 +142,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        
-        switch indexPath.row {
-        case 0:
-            cell.imageView?.image = UIImage(systemName: "cloud.sun.bolt.fill")
-            cell.textLabel?.text = "Description - \(self.data?.weather.description ?? "")"
-        case 1:
-            cell.imageView?.image = UIImage(systemName: "thermometer")
-            cell.textLabel?.text = "Temperature - " + (self.data?.getTemperature(mainTemp: true) ?? "???")
-        case 2:
-            cell.imageView?.image = UIImage(systemName: "thermometer.sun")
-            cell.textLabel?.text = "Fells like - " + (self.data?.getTemperature(mainTemp: false) ?? "???")
-        case 3:
-            cell.imageView?.image = UIImage(systemName: "humidity")
-            cell.textLabel?.text = "Humidity - \(self.data?.weather.humidity ?? 0)"
-        case 4:
-            cell.imageView?.image = UIImage(systemName: "rectangle.compress.vertical")
-            cell.textLabel?.text = "Preassure - \(self.data?.weather.pressure ?? 0)"
-        default:
-            cell.imageView?.image = UIImage(systemName: "wind")
-            cell.textLabel?.text = "Wind speed - \(self.data?.weather.windSpeed ?? 0)"
-        }
-        
-        return cell
+        return self.viewModel.setupCellWith(indexPath: indexPath)
     }
 }
 

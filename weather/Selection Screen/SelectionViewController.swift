@@ -10,16 +10,14 @@ import UIKit
 class SelectionViewController : UIViewController {
     
     // MARK: - VARs
-    var callbackWithDataModel : ((DataModel)->())?
-    private var cities = CityModel.cities
+    var callbackWithDataModel : ((DataModel?)->())?
+    private let viewModel = SelectionViewModel()
     private let cityPicker = UIPickerView()
     private let selectionButton = UIButton(type: .system)
-
+    private let yesterdayDate : Date = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
     private let temperatureFormatSelection = UISegmentedControl(
         items: [ "Celsius", "Fahrenheit", "Kelvin"]
     )
-    
-    private let yesterdayDate : Date = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
     
     
     // MARK: - LIFE CYCLE
@@ -28,6 +26,7 @@ class SelectionViewController : UIViewController {
         setupUI()
         setupConstraints()
     }
+    
     
     // MARK: - UI
     private func setupUI() {
@@ -91,47 +90,15 @@ class SelectionViewController : UIViewController {
 
     @objc private func selectionButtonPressed() {
         Task {
-            await handleSelectionButtonPressed()
-        }
-    }
-    
-    private func handleSelectionButtonPressed() async {
-        //get city
-        let city = self.cities[self.cityPicker.selectedRow(inComponent: 0)]
-        
-        //get web weather model
-        guard let webWeatherModel = await NetworkManager.shared.getWeather(cityName: city.name)
-        else {
-            print("ERROR: Can`t get weather")
-            return
-        }
-        
-        // create weather model
-        let weather = PresentationWeatherModel(weatherFromWeb: webWeatherModel)
-        
-        // create data model
-        let dataModel = DataModel(
-            city: city,
-            weather: weather,
-            temperatureFormat: self.checkTemperatureFormat()
-        )
-        
-        // pass data model
-        print("1 - \(dataModel)")
-        self.callbackWithDataModel?(dataModel)
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    
-    // MARK: - HELPERS
-    private func checkTemperatureFormat() -> TemperatureFormat {
-        switch self.temperatureFormatSelection.selectedSegmentIndex {
-        case 0:
-            return .celsius
-        case 1:
-            return .fahrenheit
-        default:
-            return .kelvin
+            // fetch data
+            guard let dataModel = await self.viewModel.fetchData(
+                cityIndex: self.cityPicker.selectedRow(inComponent: 0),
+                temperatureIndex: self.temperatureFormatSelection.selectedSegmentIndex)
+            else { return }
+            
+            // pass data to HomeVC
+            self.callbackWithDataModel?(dataModel)
+            self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -146,11 +113,11 @@ extension SelectionViewController: UIPickerViewDelegate, UIPickerViewDataSource 
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.cities.count
+        return self.viewModel.cities.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.cities[row].name
+        return self.viewModel.cities[row].name
     }
 
 }
