@@ -10,7 +10,7 @@ import UIKit
 class SelectionViewController : UIViewController {
     
     // MARK: - VARs
-    var callbackWithData : ((WeatherModel)->())?
+    var callbackWithDataModel : ((DataModel)->())?
     private var cities = CityModel.cities
     private let cityPicker = UIPickerView()
     private let selectionButton = UIButton(type: .system)
@@ -88,8 +88,14 @@ class SelectionViewController : UIViewController {
     
     
     // MARK: - ACTIONS
-    @objc private func selectionButtonPressed() async {
-        
+
+    @objc private func selectionButtonPressed() {
+        Task {
+            await handleSelectionButtonPressed()
+        }
+    }
+    
+    private func handleSelectionButtonPressed() async {
         //get city
         let city = self.cities[self.cityPicker.selectedRow(inComponent: 0)]
         
@@ -104,13 +110,16 @@ class SelectionViewController : UIViewController {
         let weather = PresentationWeatherModel(weatherFromWeb: webWeatherModel)
         
         // create data model
-        let dataModel = WeatherModel(
+        let dataModel = DataModel(
             city: city,
             weather: weather,
             temperatureFormat: self.checkTemperatureFormat()
         )
         
-        self.callbackWithData?(dataModel)
+        // pass data model
+        print("1 - \(dataModel)")
+        self.callbackWithDataModel?(dataModel)
+        self.navigationController?.popViewController(animated: true)
     }
     
     

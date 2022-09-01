@@ -14,15 +14,19 @@ class HomeViewController: UIViewController {
     private let typeLabel = UILabel()
     private let table     = UITableView()
     private let button    = UIButton(type: .system)
-    private var data      : WeatherModel?
+    private var data      : DataModel?
     
     
     //MARK: - LIFE CYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupData()
         setupConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setupData()
     }
     
     
@@ -76,15 +80,15 @@ class HomeViewController: UIViewController {
     
     // controls
     private func setupLabels() {
-        setupLabelWith(label: self.nameLabel,
-                       font: .systemFont(ofSize: 36, weight: .bold),
-                       textColor: .black
-        )
+        self.nameLabel.font = .systemFont(ofSize: 36, weight: .bold)
+        self.nameLabel.textColor = .black
+        self.nameLabel.numberOfLines = 1
+        self.nameLabel.textAlignment = .center
         
-        setupLabelWith(label: self.typeLabel,
-                       font: .systemFont(ofSize: 17, weight: .regular),
-                       textColor: .systemGray
-        )
+        self.typeLabel.font = .systemFont(ofSize: 17, weight: .regular)
+        self.typeLabel.textColor = .systemGray
+        self.typeLabel.numberOfLines = 1
+        self.typeLabel.textAlignment = .center
     }
     
     private func setupButton() {
@@ -104,33 +108,28 @@ class HomeViewController: UIViewController {
     
     
     // MARK: - ACTIONS
-    
-    // data
-    private func setupData() {
-        self.nameLabel.text = self.data?.city.name ?? "City name"
-        self.typeLabel.text = self.data?.city.size.rawValue ?? "Size"
-        self.table.isHidden = self.data == nil ? true : false
-    }
-    
+
     // button pressed
     @objc private func buttonPressed() {
         let vc = SelectionViewController()
-        vc.callbackWithData? = { dataModel in
-                self.data = dataModel
-                self.setupData()
+        vc.callbackWithDataModel? = { dataModel in
+            print("2 - \(dataModel)")
+            self.data = dataModel
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     
     // MARK: - HELPERS
-    private func setupLabelWith(label: UILabel, font: UIFont, textColor: UIColor) {
-        label.font = font
-        label.textColor = textColor
-        label.numberOfLines = 1
-        label.textAlignment = .center
-    }
     
+    private func setupData() {
+        self.nameLabel.text = self.data?.city.name ?? "City name"
+        self.typeLabel.text = self.data?.city.size.rawValue ?? "Size"
+        self.table.isHidden = self.data == nil ? true : false
+        self.table.reloadData()
+        
+        if self.data == nil { print("ERROR: where is my data ?") }
+    }
     
 } // class end
 

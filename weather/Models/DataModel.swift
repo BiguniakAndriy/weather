@@ -8,7 +8,7 @@
 import Foundation
 
 // data model
-struct WeatherModel {
+struct DataModel {
     var city              : CityModel
     var weather           : PresentationWeatherModel
     var temperatureFormat : TemperatureFormat
@@ -20,11 +20,11 @@ struct WeatherModel {
         
         switch self.temperatureFormat {
         case .fahrenheit:
-            return String((temp - 273.15) * 1.8 + 32)+" °F"
+            return String((temp - 273.15) * 1.8 + 32) + " " + TemperatureFormat.fahrenheit.rawValue
         case .celsius:
-            return String(temp - 273.15)+" °C"
+            return String(temp - 273.15) + " " + TemperatureFormat.celsius.rawValue
         case .kelvin:
-            return String(temp)+" K"
+            return String(temp) + " " + TemperatureFormat.kelvin.rawValue
         }
     }
     
