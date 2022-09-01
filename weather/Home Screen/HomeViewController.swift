@@ -113,7 +113,7 @@ class HomeViewController: UIViewController {
 
     @objc private func buttonPressed() {
         let vc = SelectionViewController()
-        vc.callbackWithDataModel? = { dataModel in
+        vc.callbackWithDataModel? = { [unowned self] dataModel in
             print("2 - \(dataModel)")
             self.viewModel.dataModel = dataModel
         }
