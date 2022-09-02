@@ -20,14 +20,13 @@ struct DataModel {
         
         switch self.temperatureFormat {
         case .fahrenheit:
-            return String((temp - 273.15) * 1.8 + 32) + " " + TemperatureFormat.fahrenheit.rawValue
+            return String(Int((temp - 273.15) * 1.8 + 32)) + " " + TemperatureFormat.fahrenheit.rawValue
         case .celsius:
-            return String(temp - 273.15) + " " + TemperatureFormat.celsius.rawValue
+            return String(Int(temp - 273.15)) + " " + TemperatureFormat.celsius.rawValue
         case .kelvin:
-            return String(temp) + " " + TemperatureFormat.kelvin.rawValue
+            return String(Int(temp)) + " " + TemperatureFormat.kelvin.rawValue
         }
     }
-    
 }
 
 struct PresentationWeatherModel {
@@ -39,7 +38,7 @@ struct PresentationWeatherModel {
     var windSpeed       : Double
     
     init(weatherFromWeb: WebWeatherModel) {
-        self.description = "description"
+        self.description = "Current weather"
         self.temp = weatherFromWeb.main.temp
         self.tempFeelsLike = weatherFromWeb.main.feelsLike
         self.humidity = weatherFromWeb.main.humidity

@@ -53,22 +53,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		9511BBDD28C0B67200BAFB7B /* Home Screen */ = {
+		9511BBDD28C0B67200BAFB7B /* Home */ = {
 			isa = PBXGroup;
 			children = (
 				9511BBD928C0B54800BAFB7B /* HomeViewModel.swift */,
 				95F2460028BCE5A000E01BF3 /* HomeViewController.swift */,
 			);
-			path = "Home Screen";
+			path = Home;
 			sourceTree = "<group>";
 		};
-		9511BBDE28C0B67C00BAFB7B /* Selection Screen */ = {
+		9511BBDE28C0B67C00BAFB7B /* Selection */ = {
 			isa = PBXGroup;
 			children = (
 				9511BBDB28C0B5A500BAFB7B /* SelectionViewModel.swift */,
 				95F2461B28BCE8C000E01BF3 /* SelectionViewController.swift */,
 			);
-			path = "Selection Screen";
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		9511BBDF28C209D100BAFB7B /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				9511BBDD28C0B67200BAFB7B /* Home */,
+				9511BBDE28C0B67C00BAFB7B /* Selection */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		9511BBE028C209E500BAFB7B /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				95F2461128BCE8BF00E01BF3 /* NetworkManager.swift */,
+			);
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		95F245F028BCE5A000E01BF3 = {
@@ -90,11 +107,10 @@
 		95F245FB28BCE5A000E01BF3 /* weather */ = {
 			isa = PBXGroup;
 			children = (
-				95F2462428BCE9BF00E01BF3 /* CORE */,
-				9511BBDD28C0B67200BAFB7B /* Home Screen */,
-				9511BBDE28C0B67C00BAFB7B /* Selection Screen */,
+				95F2462428BCE9BF00E01BF3 /* Core */,
+				9511BBDF28C209D100BAFB7B /* Screens */,
+				9511BBE028C209E500BAFB7B /* Managers */,
 				95F2461228BCE8BF00E01BF3 /* Models */,
-				95F2461128BCE8BF00E01BF3 /* NetworkManager.swift */,
 				95F2460528BCE5A200E01BF3 /* Assets.xcassets */,
 				95F2460728BCE5A200E01BF3 /* LaunchScreen.storyboard */,
 				95F2460A28BCE5A200E01BF3 /* Info.plist */,
@@ -113,13 +129,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		95F2462428BCE9BF00E01BF3 /* CORE */ = {
+		95F2462428BCE9BF00E01BF3 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				95F245FE28BCE5A000E01BF3 /* SceneDelegate.swift */,
 				95F245FC28BCE5A000E01BF3 /* AppDelegate.swift */,
 			);
-			path = CORE;
+			path = Core;
 			sourceTree = "<group>";
 		};
 		95F2462728BCECC000E01BF3 /* WebModels */ = {
