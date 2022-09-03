@@ -10,17 +10,19 @@ import UIKit
 class SelectionViewController : UIViewController {
     
     // MARK: - VARs
-    var callbackWithDataModel : ((DataModel?)->())?
-    private let viewModel = SelectionViewModel()
+    
     private let cityPicker = UIPickerView()
     private let selectionButton = UIButton(type: .system)
-    private let yesterdayDate : Date = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-    private let temperatureFormatSelection = UISegmentedControl(
+    
+    private let viewModel = SelectionViewModel()
+    var callbackWithDataModel : ((DataModel?)->())?
+    private let tempreratureSegmentedControl = UISegmentedControl(
         items: [ "Celsius", "Fahrenheit", "Kelvin"]
     )
     
     
     // MARK: - LIFE CYCLE
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -29,11 +31,12 @@ class SelectionViewController : UIViewController {
     
     
     // MARK: - UI
+    
     private func setupUI() {
         self.view.backgroundColor = .white
         
         self.view.addSubview(self.cityPicker)
-        self.view.addSubview(self.temperatureFormatSelection)
+        self.view.addSubview(self.tempreratureSegmentedControl)
         self.view.addSubview(self.selectionButton)
         
         setupCityPicker()
@@ -47,7 +50,7 @@ class SelectionViewController : UIViewController {
     }
     
     private func setupTemperatureFormatSelection() {
-        self.temperatureFormatSelection.selectedSegmentIndex = 0
+        self.tempreratureSegmentedControl.selectedSegmentIndex = 0
     }
     
     private func setupSelectionButton() {
@@ -57,29 +60,36 @@ class SelectionViewController : UIViewController {
         self.selectionButton.setTitle("Get weather", for: .normal)
         self.selectionButton.setTitleColor(.white, for: .normal)
         self.selectionButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
-        self.selectionButton.addTarget(self, action: #selector(selectionButtonPressed), for: .touchUpInside)
+        self.selectionButton.addTarget(self, action: #selector(selectionButtonPressed),
+                                       for: .touchUpInside)
     }
     
     private func setupConstraints() {
         self.cityPicker.translatesAutoresizingMaskIntoConstraints = false
-        self.temperatureFormatSelection.translatesAutoresizingMaskIntoConstraints = false
+        self.tempreratureSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         self.selectionButton.translatesAutoresizingMaskIntoConstraints = false
         
         let standartHeight : CGFloat = 44
         
         NSLayoutConstraint.activate([
             self.cityPicker.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.cityPicker.centerYAnchor.constraint(equalTo: self.view.centerYAnchor,constant: -standartHeight),
-            self.cityPicker.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.75),
-            self.cityPicker.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.25),
+            self.cityPicker.centerYAnchor.constraint(equalTo: self.view.centerYAnchor,
+                                                     constant: -standartHeight),
+            self.cityPicker.widthAnchor.constraint(equalTo: self.view.widthAnchor,
+                                                   multiplier: 0.75),
+            self.cityPicker.heightAnchor.constraint(equalTo: self.view.heightAnchor,
+                                                    multiplier: 0.25),
             
-            self.temperatureFormatSelection.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.temperatureFormatSelection.topAnchor.constraint(equalTo: self.cityPicker.bottomAnchor, constant: standartHeight),
-            self.temperatureFormatSelection.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.75),
-            self.temperatureFormatSelection.heightAnchor.constraint(equalToConstant: standartHeight),
+            self.tempreratureSegmentedControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.tempreratureSegmentedControl.topAnchor.constraint(equalTo: self.cityPicker.bottomAnchor,
+                                                                   constant: standartHeight),
+            self.tempreratureSegmentedControl.widthAnchor.constraint(equalTo: self.view.widthAnchor,
+                                                                     multiplier: 0.75),
+            self.tempreratureSegmentedControl.heightAnchor.constraint(equalToConstant: standartHeight),
             
             self.selectionButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.selectionButton.topAnchor.constraint(equalTo: self.temperatureFormatSelection.bottomAnchor, constant: standartHeight*2),
+            self.selectionButton.topAnchor.constraint(equalTo: self.tempreratureSegmentedControl.bottomAnchor,
+                                                      constant: standartHeight*2),
             self.selectionButton.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.5),
             self.selectionButton.heightAnchor.constraint(equalToConstant: standartHeight),
         ])
@@ -93,7 +103,7 @@ class SelectionViewController : UIViewController {
             // fetch data
             guard let dataModel = await self.viewModel.fetchData(
                 cityIndex: self.cityPicker.selectedRow(inComponent: 0),
-                temperatureIndex: self.temperatureFormatSelection.selectedSegmentIndex)
+                temperatureIndex: self.tempreratureSegmentedControl.selectedSegmentIndex)
             else { return }
             
             // pass data to HomeVC

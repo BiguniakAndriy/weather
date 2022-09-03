@@ -19,18 +19,21 @@ class NetworkManager {
         
         // check url
         guard let jsonUrl = URL(string: "http://api.openweathermap.org/geo/1.0/direct?q=\(cityName)&limit=5&appid=\(self.geoKey)")
-        else { throw NSError() }
+        else { throw NetworkErrors.wrongURL }
 
         do {
             // get data
             let (data, response) = try await URLSession.shared.data(from: jsonUrl)
+            
             guard (response as? HTTPURLResponse)?.statusCode == 200
-            else { throw NSError() }
+            else { throw NetworkErrors.badResponseStatusCode }
+            
             guard let city = try JSONDecoder().decode([WebCityDataModel].self, from: data).first
-            else { throw NSError() }
+            else { throw NetworkErrors.serializationError }
+            
             return [city.lat, city.lon]
         }
-        catch let error { throw error }
+        catch { throw NetworkErrors.UrlSessionError }
     }
     
     // get weather
@@ -44,14 +47,18 @@ class NetworkManager {
             guard !coordinates.isEmpty,
                   let url = URL(string:
                     "https://api.openweathermap.org/data/2.5/weather?lat=\(coordinates[0])&lon=\(coordinates[1])&appid=\(self.geoKey)")
-            else { throw NSError() }
+            else { throw NetworkErrors.wrongURL }
             
             // get weather
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await URLSession.shared.data(from: url)
+            
+            guard (response as? HTTPURLResponse)?.statusCode == 200
+            else { throw NetworkErrors.badResponseStatusCode }
+            
             let webWeatherModel = try JSONDecoder().decode(WebWeatherModel.self, from: data)
             return webWeatherModel
         }
-        catch let error { throw error }
+        catch { throw error }
     }
     
 } // class end
