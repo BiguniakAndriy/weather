@@ -106,9 +106,11 @@ class SelectionViewController : UIViewController {
                 temperatureIndex: self.tempreratureSegmentedControl.selectedSegmentIndex)
             else { return }
             
-            // pass data to HomeVC
-            self.callbackWithDataModel?(dataModel)
-            self.navigationController?.popViewController(animated: true)
+            await MainActor.run {
+                // pass data to HomeVC
+                self.callbackWithDataModel?(dataModel)
+                self.navigationController?.popViewController(animated: true)    
+            }
         }
     }
     
